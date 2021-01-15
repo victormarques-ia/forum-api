@@ -1,11 +1,15 @@
 package br.com.vsmo.forumapi.model;
 
-public class Usuario {
+public class Course {
 
 	private Long id;
-	private String nome;
-	private String email;
-	private String senha;
+	private String name;
+	private String category;
+
+	public Course(String name, String category) {
+		this.name = name;
+		this.category = category;
+	}
 
 	@Override
 	public int hashCode() {
@@ -23,7 +27,7 @@ public class Usuario {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Usuario other = (Usuario) obj;
+		Course other = (Course) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -40,28 +44,20 @@ public class Usuario {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }
