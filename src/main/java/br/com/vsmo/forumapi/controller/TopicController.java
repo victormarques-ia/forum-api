@@ -3,6 +3,8 @@ package br.com.vsmo.forumapi.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +45,8 @@ public class TopicController {
   }
 
   @PostMapping
-  public ResponseEntity<TopicDTO> createTopic(@RequestBody TopicForm topicForm, UriComponentsBuilder uriBuilder) {
+  public ResponseEntity<TopicDTO> createTopic(@RequestBody @Valid TopicForm topicForm,
+      UriComponentsBuilder uriBuilder) {
     Topic topic = topicForm.mapper(courseRepository);
     topicRepository.save(topic);
 
