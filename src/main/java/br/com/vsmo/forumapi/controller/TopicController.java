@@ -2,10 +2,12 @@ package br.com.vsmo.forumapi.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,25 +64,43 @@ public class TopicController {
   }
 
   @GetMapping("/{id}")
-  public TopicDetailsDTO findTopic(@PathVariable Long id) {
-    Topic topic = topicRepository.getOne(id);
-    return new TopicDetailsDTO(topic);
+  public ResponseEntity<TopicDetailsDTO> findTopic(@PathVariable Long id) {
+    Optional<Topic> optionalTopic = topicRepository.findById(id);
+
+    if (optionalTopic.isPresent()) {
+      return ResponseEntity.ok(new TopicDetailsDTO(optionalTopic.get()));
+    }
+
+    return ResponseEntity.notFound().build();
   }
 
   @PutMapping("/{id}")
   @Transactional
   public ResponseEntity<TopicDTO> updateTopic(@PathVariable Long id,
       @RequestBody @Valid TopicUpdateForm topicUpdateForm) {
-    Topic topic = topicUpdateForm.update(id, topicRepository);
 
-    return ResponseEntity.ok(new TopicDTO(topic));
+    Optional<Topic> optionalTopic = topicRepository.findById(id);
+
+    if (optionalTopic.isPresent()) {
+      Topic topic = topicUpdateForm.update(id, topicRepository);
+      return ResponseEntity.ok(new TopicDTO(topic));
+    }
+
+    return ResponseEntity.notFound().build();
+
   }
 
   @DeleteMapping("/{id}")
   @Transactional
   public ResponseEntity removeTopic(@PathVariable Long id) {
-    topicRepository.deleteById(id);
+    Optional<Topic> optionalTopic = topicRepository.findById(id);
 
-    return ResponseEntity.ok().build();
+    if (optionalTopic.isPresent()) {
+      topicRepository.deleteById(id);
+      return ResponseEntity.ok().build();
+    }
+
+    return ResponseEntity.notFound().build();
+
   }
 }
