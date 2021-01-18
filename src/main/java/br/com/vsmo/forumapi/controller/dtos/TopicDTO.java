@@ -1,8 +1,8 @@
 package br.com.vsmo.forumapi.controller.dtos;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
 
 import br.com.vsmo.forumapi.model.Topic;
 
@@ -36,8 +36,8 @@ public class TopicDTO {
     return creationDate;
   }
 
-  public static List<TopicDTO> mapper(List<Topic> topics) {
-    return topics.stream().map(TopicDTO::new).collect(Collectors.toList());
+  public static Page<TopicDTO> mapper(Page<Topic> topics) {
+    return topics.map(TopicDTO::new);
   }
 
 }

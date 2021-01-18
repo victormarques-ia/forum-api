@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import br.com.vsmo.forumapi.model.Answer;
 import br.com.vsmo.forumapi.model.StatusTopic;
 import br.com.vsmo.forumapi.model.Topic;
 
