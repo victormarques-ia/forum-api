@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -42,6 +44,7 @@ public class TopicController {
   private CourseRepository courseRepository;
 
   @GetMapping
+  @Cacheable(value = "findTopics")
   public Page<TopicDTO> findTopics(@RequestParam(required = false) String courseName,
       @PageableDefault(sort = "id", direction = Direction.ASC) Pageable pagination) {
 
@@ -58,6 +61,7 @@ public class TopicController {
 
   @PostMapping
   @Transactional
+  @CacheEvict(value = "findTopics", allEntries = true)
   public ResponseEntity<TopicDTO> createTopic(@RequestBody @Valid TopicForm topicForm,
       UriComponentsBuilder uriBuilder) {
     Topic topic = topicForm.mapper(courseRepository);
