@@ -22,7 +22,7 @@ public class AuthenticationService implements UserDetailsService {
     Optional<User> user = userRepository.findByEmail(username);
 
     if (user.isPresent()) {
-      user.get();
+      return user.get();
     }
     throw new UsernameNotFoundException("Invalid data");
   }
