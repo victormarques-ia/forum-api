@@ -1,5 +1,6 @@
 package br.com.vsmo.forumapi.config.security;
 
+import br.com.vsmo.forumapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
@@ -19,6 +21,12 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
   @Autowired
   private AuthenticationService authenticationService;
+
+  @Autowired
+  private TokenService tokenService;
+
+  @Autowired
+  private UserRepository userRepository;
 
   // Configurações para gerenciar a autenticação
   @Override
@@ -40,9 +48,11 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/topics").permitAll()
             .antMatchers(HttpMethod.GET, "/topics/*")
             .permitAll()
-            .antMatchers(HttpMethod.POST, "/auth")
-            .permitAll()
-            .anyRequest().authenticated().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .antMatchers(HttpMethod.POST, "/auth").permitAll()
+            .anyRequest().authenticated().and().csrf().disable()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().addFilterBefore(new AuthenticationByFilterToken(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
 
   }
 
